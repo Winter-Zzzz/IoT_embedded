@@ -45,15 +45,6 @@ private:
         {1, "Normal"},
         {2, "Rapid Cooling"}};
 
-    // 동물 아스키 아트
-    const std::string CAT_ART = R"(  /\___/\ 
- (  o o  )
- (  =^=  ))";
-
-    const std::string DOG_ART = R"(  /^___^\ 
- (  . .  )
-  \  ^  / )";
-
     std::string bytesToHex(const unsigned char *data, size_t len)
     {
         std::stringstream ss;
@@ -123,7 +114,7 @@ private:
     void drawFridge()
     {
         std::stringstream display;
-        display << "\033[H"; // 커서를 화면 맨 위로 이동
+        display << "\033[H\033[2J"; // 커서를 화면 맨 위로 이동하고 화면을 완전히 지움
 
         std::string fridgeColor = colorCodes[currentColor];
         std::string resetColor = "\033[0m";
@@ -134,9 +125,11 @@ private:
         display << "Temperature Mode: " << tempModes[temperatureMode] << "\n";
         display << "Color: " << currentColor << "\n\n";
 
+        // 색상을 테두리 출력 전에 적용
+        display << fridgeColor;
+
         // 냉장고 상단부
         display << "    ╔════════════════════╗    \n";
-        display << fridgeColor;
         display << "    ║   Smart  Fridge    ║    \n";
 
         // 온도 표시
@@ -155,24 +148,18 @@ private:
         }
         display << "    ║  [" << tempIndicator << "]          ║    \n";
 
-        // 동물 디스플레이 영역
+        // 동물 디스플레이 영역 - 각 줄의 길이를 20자로 맞춤
         if (animalMode == "cat")
         {
-            std::stringstream ss(CAT_ART);
-            std::string line;
-            while (std::getline(ss, line))
-            {
-                display << "    ║  " << line << "        ║    \n";
-            }
+            display << "    ║  /\\___/\\           ║    \n";
+            display << "    ║ (  o o  )          ║    \n";
+            display << "    ║ (  =^=  )          ║    \n";
         }
         else if (animalMode == "dog")
         {
-            std::stringstream ss(DOG_ART);
-            std::string line;
-            while (std::getline(ss, line))
-            {
-                display << "    ║  " << line << "        ║    \n";
-            }
+            display << "    ║  /^___^\\           ║    \n";
+            display << "    ║ (  . .  )          ║    \n";
+            display << "    ║  \\  ^  /           ║    \n";
         }
         else
         {
@@ -210,9 +197,6 @@ private:
 
         // 상태 정보
         display << "\nLast executed: " << lastExecutedFunction << "\n";
-
-        // 화면 나머지 부분 지우기
-        display << "\033[J";
 
         std::cout << display.str();
         std::cout.flush();
