@@ -201,7 +201,7 @@ public:
         }
         else if(name == "setTemp" && !args.empty()) {
             temperature = std::stoi(args[0]);
-            result = "Temperature set to " + std::to_string(temperature) + "°C";
+            result = "Temperature set to " + std::to_string(temperature);
         }
         else if(name == "getCoordinate") {
             std::stringstream ss;
