@@ -21,6 +21,7 @@ private:
     std::string publicKey;
     uint64_t currentIndex;
     std::string lastExecutedFunction;
+    std::string lastReceivedTX;
 
     // 냉장고 상태
     int temperatureMode; // 0: 에너지 절약, 1: 기본, 2: 급속
@@ -196,6 +197,7 @@ private:
         display << resetColor;
 
         // 상태 정보
+        display << "\nLastReceivedTX: " << lastReceivedTX << "\n";
         display << "\nLast executed: " << lastExecutedFunction << "\n";
 
         std::cout << display.str();
@@ -260,6 +262,7 @@ public:
         passcode = "3f20ded60a70ad3d918d6c293bfaf863";
         currentIndex = 1;
         lastExecutedFunction = "No tx executed yet";
+        lastReceivedTX = "tx does not exist yet";
 
         // 초기 상태
         temperatureMode = 1; // 기본 모드
@@ -368,6 +371,7 @@ public:
                 if (!response.empty())
                 {
                     std::string txData = MatterTunnel::extractTXDataWithoutSign(privateKey, response);
+                    lastReceivedTX = response;
 
                     // JSON 파싱
                     size_t funcStart = txData.find("\"funcName\":\"") + 12;

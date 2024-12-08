@@ -20,6 +20,7 @@ private:
     std::string publicKey;
     uint64_t currentIndex;
     std::string lastExecutedFunction;
+    std::string lastReceivedTX;
 
     // 차량 상태
     bool engineOn;
@@ -118,6 +119,7 @@ private:
         display << "      \\_/             \\_/     \n";
 
         // Last executed function
+        display << "\nLastReceivedTX: " << lastReceivedTX << "\n";
         display << "\nLast executed: " << lastExecutedFunction << "\n";
 
         std::cout << display.str();
@@ -173,6 +175,7 @@ public:
         passcode = "98e06e5484c272362ed03d138c420e2c";
         currentIndex = 1;
         lastExecutedFunction = "No tx executed yet";
+        lastReceivedTX = "tx does not exist yet";
 
         // Initial state
         engineOn = false;
@@ -242,7 +245,8 @@ public:
 
                 if(!response.empty()) {
                     std::string txData = MatterTunnel::extractTXDataWithoutSign(privateKey, response);
-
+                    lastReceivedTX = response;
+                    
                     // Parse JSON
                     size_t funcStart = txData.find("\"funcName\":\"") + 12;
                     size_t funcEnd = txData.find("\"", funcStart);
